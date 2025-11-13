@@ -8,7 +8,8 @@ import {
   Dimensions,
 } from 'react-native';
 import {Colors, Theme} from '@constants';
-import {useProfileStore} from '@store';
+import {useAppDispatch, useAppSelector} from '@store/hooks';
+import {loadProfiles, likeProfile, passProfile, superLikeProfile} from '@store/profileSlice';
 import ProfileCard from '@components/cards/ProfileCard';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
@@ -16,38 +17,33 @@ import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 
 const DiscoverScreen: React.FC = () => {
-  const {
-    profiles,
-    currentIndex,
-    isLoading,
-    loadProfiles,
-    likeProfile,
-    passProfile,
-    superLikeProfile,
-  } = useProfileStore();
+  const dispatch = useAppDispatch();
+  const {profiles, currentIndex, isLoading} = useAppSelector(
+    state => state.profile,
+  );
 
   useEffect(() => {
-    loadProfiles();
-  }, [loadProfiles]);
+    dispatch(loadProfiles());
+  }, [dispatch]);
 
   const currentProfile = profiles[currentIndex];
   const nextProfile = profiles[currentIndex + 1];
 
   const handleLike = () => {
     if (currentProfile) {
-      likeProfile(currentProfile.id);
+      dispatch(likeProfile(currentProfile.id));
     }
   };
 
   const handlePass = () => {
     if (currentProfile) {
-      passProfile(currentProfile.id);
+      dispatch(passProfile(currentProfile.id));
     }
   };
 
   const handleSuperLike = () => {
     if (currentProfile) {
-      superLikeProfile(currentProfile.id);
+      dispatch(superLikeProfile(currentProfile.id));
     }
   };
 
@@ -77,7 +73,7 @@ const DiscoverScreen: React.FC = () => {
         </Text>
         <TouchableOpacity
           style={styles.refreshButton}
-          onPress={loadProfiles}>
+          onPress={() => dispatch(loadProfiles())}>
           <Icon name="refresh-outline" size={24} color={Colors.textInverse} />
           <Text style={styles.refreshButtonText}>Refresh</Text>
         </TouchableOpacity>

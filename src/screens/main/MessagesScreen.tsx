@@ -9,17 +9,19 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {Colors, Theme} from '@constants';
-import {useMatchStore} from '@store';
+import {useAppDispatch, useAppSelector} from '@store/hooks';
+import {loadMatches} from '@store/matchSlice';
 import {calculateAge, formatMessageTime} from '@utils';
 import Icon from 'react-native-vector-icons/Ionicons';
 import type {Match} from '@types';
 
 const MessagesScreen: React.FC = () => {
-  const {matches, isLoading, loadMatches} = useMatchStore();
+  const dispatch = useAppDispatch();
+  const {matches, isLoading} = useAppSelector(state => state.match);
 
   useEffect(() => {
-    loadMatches();
-  }, [loadMatches]);
+    dispatch(loadMatches());
+  }, [dispatch]);
 
   const matchesWithMessages = matches.filter(match => match.lastMessage);
 

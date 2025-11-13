@@ -12,7 +12,8 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {AuthStackParamList} from '@types';
 import {Button, Input} from '@components/common';
 import {Colors, Theme} from '@constants';
-import {useAuthStore} from '@store';
+import {useAppDispatch, useAppSelector} from '@store/hooks';
+import {signup} from '@store/authSlice';
 import {useForm, Controller} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {signupSchema, SignupInput} from '@utils/validation';
@@ -20,7 +21,8 @@ import {signupSchema, SignupInput} from '@utils/validation';
 type Props = NativeStackScreenProps<AuthStackParamList, 'Signup'>;
 
 const SignupScreen: React.FC<Props> = ({navigation}) => {
-  const {signup, isLoading} = useAuthStore();
+  const dispatch = useAppDispatch();
+  const isLoading = useAppSelector(state => state.auth.isLoading);
   const {
     control,
     handleSubmit,
@@ -31,7 +33,7 @@ const SignupScreen: React.FC<Props> = ({navigation}) => {
 
   const onSubmit = async (data: SignupInput) => {
     try {
-      await signup(data.email, data.password, data.name);
+      await dispatch(signup({email: data.email, password: data.password, name: data.name})).unwrap();
       navigation.navigate('ProfileSetup');
     } catch (error) {
       console.error('Signup error:', error);

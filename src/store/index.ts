@@ -1,3 +1,16 @@
-export * from './authStore';
-export * from './profileStore';
-export * from './matchStore';
+import {configureStore} from '@reduxjs/toolkit';
+import authReducer from './authSlice';
+import profileReducer from './profileSlice';
+import matchReducer from './matchSlice';
+
+export const store = configureStore({
+  reducer: {
+    auth: authReducer,
+    profile: profileReducer,
+    match: matchReducer,
+  },
+});
+
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

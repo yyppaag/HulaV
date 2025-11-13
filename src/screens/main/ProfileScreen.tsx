@@ -9,12 +9,14 @@ import {
 } from 'react-native';
 import {Colors, Theme} from '@constants';
 import {Button} from '@components/common';
-import {useAuthStore} from '@store';
+import {useAppDispatch, useAppSelector} from '@store/hooks';
+import {logout} from '@store/authSlice';
 import {calculateAge} from '@utils';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const ProfileScreen: React.FC = () => {
-  const {logout, user} = useAuthStore();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(state => state.auth.user);
 
   if (!user) {
     return null;
@@ -124,7 +126,7 @@ const ProfileScreen: React.FC = () => {
       <View style={styles.logoutContainer}>
         <Button
           title="Logout"
-          onPress={logout}
+          onPress={() => dispatch(logout())}
           variant="outline"
           fullWidth
         />

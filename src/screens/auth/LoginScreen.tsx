@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -12,7 +12,8 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {AuthStackParamList} from '@types';
 import {Button, Input} from '@components/common';
 import {Colors, Theme} from '@constants';
-import {useAuthStore} from '@store';
+import {useAppDispatch, useAppSelector} from '@store/hooks';
+import {login} from '@store/authSlice';
 import {useForm, Controller} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {loginSchema, LoginInput} from '@utils/validation';
@@ -20,7 +21,8 @@ import {loginSchema, LoginInput} from '@utils/validation';
 type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
 
 const LoginScreen: React.FC<Props> = ({navigation}) => {
-  const {login, isLoading} = useAuthStore();
+  const dispatch = useAppDispatch();
+  const isLoading = useAppSelector(state => state.auth.isLoading);
   const {
     control,
     handleSubmit,
@@ -31,7 +33,7 @@ const LoginScreen: React.FC<Props> = ({navigation}) => {
 
   const onSubmit = async (data: LoginInput) => {
     try {
-      await login(data.email, data.password);
+      await dispatch(login({email: data.email, password: data.password})).unwrap();
     } catch (error) {
       console.error('Login error:', error);
     }

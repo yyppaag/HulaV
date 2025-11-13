@@ -4,12 +4,12 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {RootStackParamList} from '@types';
 import AuthNavigator from './AuthNavigator';
 import MainNavigator from './MainNavigator';
-import {useAuthStore} from '@store/authStore';
+import {useAppSelector} from '@store/hooks';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const AppNavigator = () => {
-  const {isAuthenticated} = useAuthStore();
+  const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
 
   return (
     <NavigationContainer>

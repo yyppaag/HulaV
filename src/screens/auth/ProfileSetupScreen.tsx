@@ -11,13 +11,15 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {AuthStackParamList} from '@types';
 import {Button, Input, DatePicker, RadioGroup} from '@components/common';
 import {Colors, Theme, MIN_AGE} from '@constants';
-import {useAuthStore} from '@store';
+import {useAppDispatch, useAppSelector} from '@store/hooks';
+import {setUser} from '@store/authSlice';
 import {calculateAge} from '@utils';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'ProfileSetup'>;
 
 const ProfileSetupScreen: React.FC<Props> = ({navigation}) => {
-  const {user, setUser} = useAuthStore();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(state => state.auth.user);
   const [name, setName] = useState(user?.name || '');
   const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>();
   const [gender, setGender] = useState<string>('');
@@ -58,13 +60,13 @@ const ProfileSetupScreen: React.FC<Props> = ({navigation}) => {
     if (validateForm() && dateOfBirth) {
       // Update user in store
       if (user) {
-        setUser({
+        dispatch(setUser({
           ...user,
           name,
           dateOfBirth: dateOfBirth.toISOString(),
           gender: gender as 'male' | 'female' | 'other',
           bio,
-        });
+        }));
       }
       navigation.navigate('PhotoUpload');
     }
