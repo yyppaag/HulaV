@@ -21,6 +21,13 @@ DerivedData
 *.ipa
 *.xcuserstate
 ios/.xcode.env.local
+*.xcarchive
+ios/build/
+*.dSYM.zip
+*.mobileprovision
+*.cer
+*.p12
+*.certSigningRequest
 
 # Android/IntelliJ
 #
@@ -33,6 +40,10 @@ local.properties
 .cxx/
 *.keystore
 !debug.keystore
+*.jks
+android/app/release/
+android/app/build/outputs/
+gradle.properties
 
 # node.js
 #
@@ -72,3 +83,17 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Environment & Secrets
+.env
+.env.local
+.env.production
+.env.staging
+secrets.json
+config/secrets.json
+
+# Release files
+release-notes.txt
+*.aab
+*.apk
+!app-debug.apk
